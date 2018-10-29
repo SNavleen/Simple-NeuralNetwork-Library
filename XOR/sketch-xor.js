@@ -30,19 +30,24 @@ function setup(){
 
 function draw(){
   background(0);
+
+  // Using batch sizes TODO: figuer out how batch size works with total cost and update the cost function
   var totalCost = [0, 0];
-  for(let k = 0; k < 1; k++){
+  let n = 10
+  for(let k = 0; k < n; k++){
     var data = random(trainingData);
     let input = data.input;
     let output = data.output;
     
     var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
     var cost = nn.getCost(output, outputPrim);
-    totalCost[0] = totalCost[0] + cost[0];
-    totalCost[1] = totalCost[1] + cost[1];
-    // console.log(cost);
+    // totalCost[0] = totalCost[0] + cost[0];
+    // totalCost[1] = totalCost[1] + cost[1];
+    // console.log(totalCost);
   }
-  nn.train(totalCost);
+  // totalCost[0] = totalCost[0]/n;
+  // totalCost[1] = totalCost[1]/n;
+  nn.train(cost);
 
   let resolution = 10;
   let col = width / resolution;
