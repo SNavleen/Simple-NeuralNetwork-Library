@@ -54,7 +54,6 @@ class NeuralNetwork{
 
     // Move this into something like the activation function
     this.costFunc = (y, yPrime) => {
-      // return (Math.pow(y - yPrime, 2)) / 2;
       return 2 * (y - yPrime);
     }
 
