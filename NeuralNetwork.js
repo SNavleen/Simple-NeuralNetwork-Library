@@ -59,6 +59,7 @@ class NeuralNetwork{
     }
 
     this.setActivationFunction();
+    this.setLearningRateAlpha();
   }
 
   addHiddenLayer(numOfNodes){
@@ -94,7 +95,7 @@ class NeuralNetwork{
   }
 
   // Setters
-  setLearningRateAlpha(learningRateAlpha){
+  setLearningRateAlpha(learningRateAlpha = 0.1){
     this.learningRateAlpha = learningRateAlpha;
   }
 
