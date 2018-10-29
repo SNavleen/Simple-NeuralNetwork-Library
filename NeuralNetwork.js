@@ -54,11 +54,11 @@ class NeuralNetwork{
 
     // Move this into something like the activation function
     this.costFunc = (y, yPrime) => {
-      // return (Math.pow(y - yPrime, 2)) / 2;
       return 2 * (y - yPrime);
     }
 
     this.setActivationFunction();
+    this.setLearningRateAlpha();
   }
 
   addHiddenLayer(numOfNodes){
@@ -94,7 +94,7 @@ class NeuralNetwork{
   }
 
   // Setters
-  setLearningRateAlpha(learningRateAlpha){
+  setLearningRateAlpha(learningRateAlpha = 0.1){
     this.learningRateAlpha = learningRateAlpha;
   }
 
