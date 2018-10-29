@@ -5,6 +5,8 @@ var linAlg = linearAlgebra();
 var Vector = linAlg.Vector;
 var Matrix = linAlg.Matrix;
 
+// Private functions
+
 function rand(lo, hi){
   return Math.random() * (hi - lo) + lo;
 }
@@ -16,6 +18,26 @@ function toMatrix(array){
 function toArray(matrix){
   return matrix.toArray();
 }
+
+
+// Activation class
+class ActivationFunction {
+  constructor(func, dfunc) {
+    this.func = func;
+    this.dfunc = dfunc;
+  }
+}
+
+let sigmoid = new ActivationFunction(
+  x => 1 / (1 + Math.exp(-x)),
+  y => y * (1 - y)
+);
+
+let tanh = new ActivationFunction(
+  x => Math.tanh(x),
+  y => 1 - (y * y)
+);
+
 
 class NeuralNetwork{
   constructor(sizeOfX, sizeOfY){
@@ -30,19 +52,13 @@ class NeuralNetwork{
     this.weights;
     this.outputOfAllLayers;
 
-    this.activationFunc = (value) => {
-      return 1 / (1 + Math.exp(-value));
-    }
-    this.activationDrivFunc = (value) => {
-      // console.log(value);
-      // console.log(1 - value);
-      return value * (1 - value);
-      // return Math.sign(value);
-    }
+    // Move this into something like the activation function
     this.costFunc = (y, yPrime) => {
       // return (Math.pow(y - yPrime, 2)) / 2;
       return 2 * (y - yPrime);
     }
+
+    this.setActivationFunction();
   }
 
   addHiddenLayer(numOfNodes){
@@ -67,7 +83,7 @@ class NeuralNetwork{
         weights[l][r] = new Array(this.listOfLayers[l+1]);
         for(let c = 0; c < this.listOfLayers[l+1]; c++){
 
-          // Set the value to a randome number between lo and hi
+          // Set the value to a random number between lo and hi
           weights[l][r][c] = rand(lo, hi);
           // console.log(rand(lo, hi));
         }
@@ -77,9 +93,18 @@ class NeuralNetwork{
     // console.log(this.weights);
   }
 
-  getWeights(){
-    return this.weights;
+  // Setters
+  setLearningRateAlpha(learningRateAlpha){
+    this.learningRateAlpha = learningRateAlpha;
   }
+
+  setActivationFunction(func = sigmoid){
+    this.activationFunc = func;
+  }
+
+  // setCostFunction(func){
+  //   this.costFunc = func;
+  // }
 
   // setWeights(weights){
   //   if(weights){
@@ -87,6 +112,12 @@ class NeuralNetwork{
   //   }
   //   this.weights = weights;
   // }
+
+
+  // Getters
+  getWeights(){
+    return this.weights;
+  }
 
   getCost(output, outputPrime){
     // console.log("Expected: ", output);
@@ -98,18 +129,8 @@ class NeuralNetwork{
     return cost;
   }
 
-  // setCostFunction(func){
-  //   this.costFunc = func;
-  // }
 
-  // setActivationDrivFunction(func){
-  //   this.activationDrivFunc = func;
-  // }
-
-  // setActivationFunction(func){
-  //   this.activationFunc = func;
-  // }
-
+  // Prediction
   guess(input){
     var A = new Array(this.numOfLayers);
     A[0] = input;
@@ -125,7 +146,7 @@ class NeuralNetwork{
 
       var Z = X.dot(W);
       // console.log("Z: ", Z);
-      A[l+1] = toArray(Z.map(this.activationFunc))[0];
+      A[l+1] = toArray(Z.map(this.activationFunc.func))[0];
     }
     // console.log("A: ", A);
 
@@ -134,7 +155,8 @@ class NeuralNetwork{
     return A[this.numOfLayers - 1];
   }
 
-  train(cost, learningRateAlpha){
+  // Training
+  train(cost){
     var error = toMatrix(cost);
     
     for(let l = this.numOfLayers - 1; l > 0; l--){
@@ -149,9 +171,9 @@ class NeuralNetwork{
       var output = toMatrix(this.outputOfAllLayers[l]);
       // console.log("Output: ", output);
 
-      var gradient = output.map(this.activationDrivFunc);
+      var gradient = output.map(this.activationFunc.dfunc);
       gradient = gradient.mul(error);
-      gradient = gradient.mulEach(learningRateAlpha);
+      gradient = gradient.mulEach(this.learningRateAlpha);
       // console.log("Gradient: ", gradient);
       
       var weightsDelta = input.dot(gradient);

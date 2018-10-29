@@ -25,6 +25,7 @@ function setup(){
   nn = new NeuralNetwork(2, 2);
   nn.addHiddenLayer(2);
   nn.generateWeights(0);
+  nn.setLearningRateAlpha(0.3);
 }
 
 function draw(){
@@ -41,7 +42,7 @@ function draw(){
     totalCost[1] = totalCost[1] + cost[1];
     // console.log(cost);
   }
-  nn.train(totalCost, 0.3);
+  nn.train(totalCost);
 
   let resolution = 10;
   let col = width / resolution;
