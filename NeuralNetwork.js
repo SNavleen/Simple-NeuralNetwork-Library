@@ -19,6 +19,21 @@ function toArray(matrix){
   return matrix.toArray();
 }
 
+// Normalization
+class Normalization{
+  // TODO: let users use there own normalization functions
+  constructor(){
+  }
+  
+  minMaxNorm(x, min, max){
+    return (x - min) / (max - min);
+  }
+
+  // setNormalization(func){
+  //   this.normalization = func;
+  // }
+}
+
 
 // Activation class
 class ActivationFunction {
@@ -29,16 +44,17 @@ class ActivationFunction {
 }
 
 let sigmoid = new ActivationFunction(
-  x => 1 / (1 + Math.exp(-x)),
-  y => y * (1 - y)
+  func = x => 1 / (1 + Math.exp(-x)),
+  dfunc = y => y * (1 - y)
 );
 
 let tanh = new ActivationFunction(
-  x => Math.tanh(x),
-  y => 1 - (y * y)
+  func = x => Math.tanh(x),
+  dfunc = y => 1 - (y * y)
 );
 
 
+// Neural Network
 class NeuralNetwork{
   constructor(sizeOfX, sizeOfY){
 
@@ -94,12 +110,12 @@ class NeuralNetwork{
   }
 
   // Setters
-  setLearningRateAlpha(learningRateAlpha = 0.1){
-    this.learningRateAlpha = learningRateAlpha;
-  }
-
   setActivationFunction(func = sigmoid){
     this.activationFunc = func;
+  }
+
+  setLearningRateAlpha(learningRateAlpha = 0.1){
+    this.learningRateAlpha = learningRateAlpha;
   }
 
   // setCostFunction(func){
