@@ -1,3 +1,5 @@
+// TODO: add proper comments for doc
+
 // Import the libraries
 var linAlg = linearAlgebra();
 
@@ -24,7 +26,7 @@ class Normalization{
   // TODO: let users use there own normalization functions
   constructor(){
   }
-  
+
   minMaxNorm(x, min, max){
     return (x - min) / (max - min);
   }
