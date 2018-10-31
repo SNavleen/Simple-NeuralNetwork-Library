@@ -11,11 +11,14 @@ function randomColor(){
 function mousePressed(){
 
   let guess = prediction(red, green, blue);
+  var cost;
+  console.log(guess);
 
   if(mouseX >  0 && mouseX < width / 2){
     // White (aka 1)
     // Get cost
-    var cost = nn.getCost(1, guess);
+    cost = nn.getCost([1], [guess]);
+    console.log(cost);
 
     // Train
     nn.train(cost);
@@ -26,7 +29,8 @@ function mousePressed(){
   }else if(mouseX >  width / 2 && mouseX < width){
     // White (aka 1)
     // Get cost
-    var cost = nn.getCost(0, guess);
+    cost = nn.getCost([0], [guess]);
+    console.log(cost);
 
     // Train
     nn.train(cost);
@@ -35,6 +39,7 @@ function mousePressed(){
     randomColor();
     redraw();
   }
+  console.log(nn.getWeights());
 }
 
 function prediction(r, g, b){
@@ -60,7 +65,7 @@ function setup(){
   nn = new NeuralNetwork(3, 1);
   nn.addHiddenLayer(3);
   nn.addHiddenLayer(2);
-  nn.setLearningRateAlpha(0.1);
+  nn.setLearningRateAlpha(1);
   nn.generateWeights(0);
 
   randomColor();
@@ -92,7 +97,6 @@ function draw(){
   text("BLACK", width - cirlceX, circleY);
 
   let guess = prediction(red, green, blue);
-  console.log(guess);
   fill(255);
   if(guess == 1){
     ellipse(cirlceX, circleY / 2, circleWidth / 5, circleHeight / 5);
