@@ -12,14 +12,12 @@ function mousePressed(){
 
   let guess = prediction(red, green, blue);
   var cost;
-  console.log(guess);
 
   if(mouseX >  0 && mouseX < width / 2){
     // White (aka 1)
+
     // Get cost
     cost = nn.getCost([1], [guess]);
-    console.log(cost);
-
     // Train
     nn.train(cost);
 
@@ -27,11 +25,10 @@ function mousePressed(){
     randomColor();
     redraw();
   }else if(mouseX >  width / 2 && mouseX < width){
-    // White (aka 1)
+    // Black (aka 0)
+
     // Get cost
     cost = nn.getCost([0], [guess]);
-    console.log(cost);
-
     // Train
     nn.train(cost);
 
@@ -39,7 +36,6 @@ function mousePressed(){
     randomColor();
     redraw();
   }
-  console.log(nn.getWeights());
 }
 
 function prediction(r, g, b){
@@ -67,6 +63,24 @@ function setup(){
   nn.addHiddenLayer(2);
   nn.setLearningRateAlpha(1);
   nn.generateWeights(0);
+
+  for(i = 0; i < 1000000; i++){
+    let r = random(255);
+    let g = random(255);
+    let b = random(255);
+
+    var expected = 0;
+    if(r + g + b > 300){
+      expected = 1;
+    }
+
+    // Guess
+    let guess = prediction(r, g, b);
+    // Get cost
+    cost = nn.getCost([expected], [guess]);
+    // Train
+    nn.train(cost);
+  }
 
   randomColor();
 }
