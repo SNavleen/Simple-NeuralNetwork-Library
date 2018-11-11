@@ -1,4 +1,5 @@
 // TODO: add proper comments for doc
+// TODO: add mini batch size and batch size using info from (https://visualstudiomagazine.com/articles/2015/07/01/variation-on-back-propagation.aspx)
 
 // Import the libraries
 var linAlg = linearAlgebra();
@@ -137,7 +138,7 @@ class NeuralNetwork{
     return this.weights;
   }
 
-  getCost(output, outputPrime){
+  getCost(output, outputPrime){ // for an individual input and output
     // console.log("Expected: ", output);
     // console.log("Guess: ", outputPrime);
     var cost = new Array(this.sizeOfY);
