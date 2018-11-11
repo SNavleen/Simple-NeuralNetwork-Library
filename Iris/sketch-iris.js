@@ -2,8 +2,8 @@ var nn;
 
 // var csvTestingData
 
-var trainingData = [];
-var testingData = [];
+var trainingData;
+var testingData;
 
 function setup(){
   // // createCanvas must be the first statement
@@ -18,36 +18,64 @@ function setup(){
   // d3.csv("http://localhost/~Nav/MachineLearning/NodeJs/Github/Simple-NeuralNetwork-Library/Iris/data/iris-test.csv", function(data) {
   //   console.log(data);
   // });
-  // var csvTrainingData = d3.csv(
-  //   "https://raw.githubusercontent.com/SNavleen/Simple-NeuralNetwork-Library/iris/Iris/data/iris-train.csv",
-  //   function(data) {
-  //     return data;
-  //   }
-  // );
 
-  var csvTestingData = d3.csv("https://raw.githubusercontent.com/SNavleen/Simple-NeuralNetwork-Library/iris/Iris/data/iris-test.csv");
-  csvTestingData.then(
+  var csvTrainingData = d3.csv("https://raw.githubusercontent.com/SNavleen/Simple-NeuralNetwork-Library/iris/Iris/data/iris-train.csv");
+  
+  trainingData = csvTrainingData.then(    
     function(data) {
-      var input = [data.sepal_length, data.sepal_width, data.petal_length, data.petal_width];
-      var output;
-      if(data.species === "setosa") {
-        output = [1, 0, 0];
-      } else if(data.species === "versicolor") {
-        output = [0, 1, 0];
-      } else if(data.species === "virginica") {
-        output = [0, 0, 1];
-      }
-      testingData.push({input: input, output: output});
+      var trainingObj = [];
+      data.forEach(element => {
+        var input = [element.sepal_length, element.sepal_width, element.petal_length, element.petal_width];
+        var output;
+        if(element.species === "setosa") {
+          output = [1, 0, 0];
+        } else if(element.species === "versicolor") {
+          output = [0, 1, 0];
+        } else if(element.species === "virginica") {
+          output = [0, 0, 1];
+        }
+        trainingObj.push({input: input, output: output});
+      });
+      
+      return new Promise(resolve => resolve(trainingObj));
     }
   );
-  console.log(csvTestingData.pending());
-  console.log(testingData);
+  var csvTestingData = d3.csv("https://raw.githubusercontent.com/SNavleen/Simple-NeuralNetwork-Library/iris/Iris/data/iris-test.csv");
+  
+  testingData = csvTestingData.then(    
+    function(data) {
+      var testingObj = [];
+      data.forEach(element => {
+        var input = [element.sepal_length, element.sepal_width, element.petal_length, element.petal_width];
+        var output;
+        if(element.species === "setosa") {
+          output = [1, 0, 0];
+        } else if(element.species === "versicolor") {
+          output = [0, 1, 0];
+        } else if(element.species === "virginica") {
+          output = [0, 0, 1];
+        }
+        testingObj.push({input: input, output: output});
+      });
+      
+      return new Promise(resolve => resolve(testingObj));
+    }
+  );
   
 }
 
 function draw(){
-  // console.log(testingData);
-  // noLoop();
+  testingData.then(
+    function(data) {
+      console.log(data);
+    }
+  );
+  trainingData.then(
+    function(data) {
+      console.log(data);
+    }
+  );
+  noLoop();
   // background(0);
 
   // // Using batch sizes TODO: figuer out how batch size works with total cost and update the cost function
