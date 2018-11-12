@@ -3,9 +3,11 @@ var nn;
 var trainingData;
 var testingData;
 
-function setup(){
-  // // createCanvas must be the first statement
-  // createCanvas(400, 400);
+var currentTrainingSet = 0;
+
+function setup() {
+  // createCanvas must be the first statement
+  createCanvas(1300, 400);
   
   nn = new NeuralNetwork(4, 3);
   nn.addHiddenLayer(3);
@@ -16,28 +18,26 @@ function setup(){
   testingData = readIrisData("https://raw.githubusercontent.com/SNavleen/Simple-NeuralNetwork-Library/iris/Iris/data/iris-test.csv");
 }
 
-function draw(){
-  testingData.then((data) => console.log(data));
-  noLoop();
+function draw() {
   // background(0);
 
-  // // Using batch sizes TODO: figuer out how batch size works with total cost and update the cost function
-  // var totalCost = [0, 0];
-  // let n = 10
-  // for(let k = 0; k < n; k++){
-  //   var data = random(trainingData);
-  //   let input = data.input;
-  //   let output = data.output;
+  trainingData.then((data) => {
+    var trainingSet = random(data);
+    let input = trainingSet.input;
+    let output = trainingSet.output;
     
-  //   var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
-  //   var cost = nn.getCost(output, outputPrim);
-  //   // totalCost[0] = totalCost[0] + cost[0];
-  //   // totalCost[1] = totalCost[1] + cost[1];
-  //   // console.log(totalCost);
-  // }
-  // // totalCost[0] = totalCost[0]/n;
-  // // totalCost[1] = totalCost[1]/n;
-  // nn.train(cost);
+    var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
+    var cost = nn.getCost(output, outputPrim);      
+    nn.train(cost);
+
+    var totalCost = cost.reduce((a, b) => a + b, 0);
+    // console.log((width / 2) + (totalCost * 20));
+    
+    fill(255);
+    ellipse(currentTrainingSet, (height / 2) + (totalCost * 50), 10, 10);
+  });
+
+  
 
   // let resolution = 10;
   // let col = width / resolution;
@@ -52,4 +52,10 @@ function draw(){
   //     rect(i*resolution, j*resolution, resolution, resolution);
   //   }
   // }
+
+  // testingData.then((data) => console.log(data));
+  currentTrainingSet ++;
+  if(currentTrainingSet == 1000) {
+    noLoop();
+  }
 }
