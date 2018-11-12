@@ -11,8 +11,9 @@ function setup() {
   
   nn = new NeuralNetwork(4, 3);
   nn.addHiddenLayer(3);
+  nn.addHiddenLayer(3);
   nn.generateWeights(0);
-  nn.setLearningRateAlpha(0.3);
+  nn.setLearningRateAlpha(0.03);
 
   trainingData = readIrisData("https://raw.githubusercontent.com/SNavleen/Simple-NeuralNetwork-Library/iris/Iris/data/iris-train.csv");
   testingData = readIrisData("https://raw.githubusercontent.com/SNavleen/Simple-NeuralNetwork-Library/iris/Iris/data/iris-test.csv");
@@ -37,7 +38,7 @@ function draw() {
     // console.log((width / 2) + (totalCost * 20));
     
     fill(255);
-    ellipse(currentTrainingSet, (height / 2) + (totalCost * 50), 10, 10);
+    ellipse(currentTrainingSet / 5, (height / 2) + (totalCost * 100), 10, 10);
   });
 
   
@@ -58,7 +59,7 @@ function draw() {
 
   // testingData.then((data) => console.log(data));
   currentTrainingSet ++;
-  if(currentTrainingSet == 1000) {
+  if(currentTrainingSet == 5000) {
     noLoop();
   }
 }
