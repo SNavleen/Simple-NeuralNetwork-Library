@@ -87,7 +87,7 @@ class NeuralNetwork{
     this.numOfLayers ++;
   }
 
-  generateWeights(seedValue, lo = -1, hi = 1){
+  generateWeights(seedValue = 0, lo = -1, hi = 1){
     // Set the seed
     Math.seedrandom(seedValue);
 
@@ -108,6 +108,7 @@ class NeuralNetwork{
         }
       }
     }
+
     this.weights = weights;
     // console.log(this.weights);
   }

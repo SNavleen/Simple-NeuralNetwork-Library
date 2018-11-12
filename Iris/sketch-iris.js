@@ -21,8 +21,11 @@ function setup() {
 function draw() {
   // background(0);
 
+  // Set the seed
+  Math.seedrandom();
   trainingData.then((data) => {
-    var trainingSet = random(data);
+    var trainingSet = data[Math.floor(Math.random() * data.length)];
+    // console.log(trainingSet);
     let input = trainingSet.input;
     let output = trainingSet.output;
     
