@@ -8,12 +8,14 @@ var currentTrainingSet = 0;
 function setup() {
   // createCanvas must be the first statement
   createCanvas(1300, 400);
+  fill(0);
+  line(0, height / 2, width, height / 2);
   
   nn = new NeuralNetwork(4, 3);
-  nn.addHiddenLayer(3);
+  nn.addHiddenLayer(6);
   nn.addHiddenLayer(3);
   nn.generateWeights(0);
-  nn.setLearningRateAlpha(0.03);
+  nn.setLearningRateAlpha(0.1);
 
   trainingData = readIrisData("https://raw.githubusercontent.com/SNavleen/Simple-NeuralNetwork-Library/iris/Iris/data/iris-train.csv");
   testingData = readIrisData("https://raw.githubusercontent.com/SNavleen/Simple-NeuralNetwork-Library/iris/Iris/data/iris-test.csv");
@@ -21,6 +23,7 @@ function setup() {
 
 function draw() {
   // background(0);
+  noStroke();
 
   // Set the seed
   Math.seedrandom();
@@ -37,8 +40,8 @@ function draw() {
     var totalCost = cost.reduce((a, b) => a + b, 0);
     // console.log((width / 2) + (totalCost * 20));
     
-    fill(255);
-    ellipse(currentTrainingSet / 5, (height / 2) + (totalCost * 100), 10, 10);
+    fill(color(255, 0, 0));
+    ellipse(currentTrainingSet / 10, (height / 2) + (totalCost * 100), 10, 10);
   });
 
   
@@ -59,7 +62,7 @@ function draw() {
 
   // testingData.then((data) => console.log(data));
   currentTrainingSet ++;
-  if(currentTrainingSet == 5000) {
+  if(currentTrainingSet == 6000) {
     noLoop();
   }
 }
