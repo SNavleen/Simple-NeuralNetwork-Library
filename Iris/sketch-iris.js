@@ -3,66 +3,104 @@ var nn;
 var trainingData;
 var testingData;
 
-var currentTrainingSet = 0;
 
-function setup() {
-  // createCanvas must be the first statement
-  createCanvas(1300, 400);
-  fill(0);
-  line(0, height / 2, width, height / 2);
-  
+function setup() {  
   nn = new NeuralNetwork(4, 3);
   nn.addHiddenLayer(6);
   nn.addHiddenLayer(3);
   nn.generateWeights(0);
-  nn.setLearningRateAlpha(0.1);
+  nn.setLearningRateAlpha(0.01);
 
   trainingData = readIrisData("https://raw.githubusercontent.com/SNavleen/Simple-NeuralNetwork-Library/iris/Iris/data/iris-train.csv");
   testingData = readIrisData("https://raw.githubusercontent.com/SNavleen/Simple-NeuralNetwork-Library/iris/Iris/data/iris-test.csv");
+
+  // Create the training chart to view cost function
+  var dataPoints = [];
+  for(let i = 0; i < 1000; i++) {
+    trainingData.then((data) => {
+      var trainingSet = data[Math.floor(Math.random() * data.length)];
+      let input = trainingSet.input;
+      let output = trainingSet.output;
+      
+      var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
+      var cost = nn.getCost(output, outputPrim);      
+      nn.train(cost);
+
+      var totalCost = cost.reduce((a, b) => a + b, 0);
+      dataPoints.push({
+        x: i,
+        y: totalCost
+      });
+
+    });
+  }
+
+  // drawChart("trainingChart", "Training char: Cost function", dataPoints);
+  new Chart(document.getElementById("trainingChart"), {
+    type: 'line',
+    data: {
+      datasets: [
+        { 
+          data: dataPoints,
+          label: "Africa",
+          borderColor: "#3e95cd",
+          fill: false
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'World population per region (in millions)'
+      }
+    }
+  });
 }
 
 function draw() {
-  // background(0);
-  noStroke();
+  // var dataPoints = [];
+  // testingData.then((data) => {
+  //   var i = 0;
+  //   data.forEach(testSet => {
+  //     let input = testSet.input;
+  //     let output = testSet.output;
 
-  // Set the seed
-  Math.seedrandom();
-  trainingData.then((data) => {
-    var trainingSet = data[Math.floor(Math.random() * data.length)];
-    // console.log(trainingSet);
-    let input = trainingSet.input;
-    let output = trainingSet.output;
-    
-    var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
-    var cost = nn.getCost(output, outputPrim);      
-    nn.train(cost);
+  //     var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
+  //     var cost = nn.getCost(output, outputPrim);
 
-    var totalCost = cost.reduce((a, b) => a + b, 0);
-    // console.log((width / 2) + (totalCost * 20));
-    
-    fill(color(255, 0, 0));
-    ellipse(currentTrainingSet / 10, (height / 2) + (totalCost * 100), 10, 10);
-  });
+  //     var totalCost = cost.reduce((a, b) => a + b, 0);
+  //     // console.log(totalCost);
+  //     dataPoints.push({
+  //       x: i,
+  //       y: totalCost
+  //     });
 
-  
+  //     i++;
+  //   });
 
-  // let resolution = 10;
-  // let col = width / resolution;
-  // let row = height / resolution;
+  // });
 
-  // for(i = 0; i < col; i++){
-  //   for(j = 0; j < row; j++){
-  //     let x = [i / col, j / row];
-  //     let y = nn.guess(JSON.parse(JSON.stringify(x)));
-  //     noStroke();
-  //     fill(y[0] * 255);
-  //     rect(i*resolution, j*resolution, resolution, resolution);
-  //   }
-  // }
-
-  // testingData.then((data) => console.log(data));
-  currentTrainingSet ++;
-  if(currentTrainingSet == 6000) {
-    noLoop();
-  }
+  // drawChart("testChart", "Testing char: Cost function", dataPoints);
+  noLoop();
 }
+
+// function drawChart(charId, charTitle, dataPoints) {
+//   var data = [
+//     {
+//       type: "line",
+//       dataPoints: dataPoints
+//     }
+//   ];
+//   var chart = new CanvasJS.Chart(charId, {
+//     animationEnabled: true,
+//     // zoomEnabled: true,
+//     title:{
+//       text: charTitle
+//     },
+//     axisY :{
+//       includeZero: true
+//     },
+//     data: data  // random generator below
+//   });
+//   chart.render();
+// }

@@ -16,6 +16,11 @@
     "tests"
   ],
   "dependencies": {
-    "mnist": "^1.0.5"
+    "mnist": "^1.0.5",
+    "chart.js": "^2.7.3",
+    "seedrandom": "^2.4.4",
+    "d3": "^5.7.0",
+    "p5.js": "p5js#^0.5.13",
+    "linear-algebra": "^3.1.1"
   }
 }

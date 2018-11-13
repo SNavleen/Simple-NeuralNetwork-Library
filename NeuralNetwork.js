@@ -109,6 +109,8 @@ class NeuralNetwork{
       }
     }
 
+    // Reset the seed back to Math.random() using time
+    Math.seedrandom();
     this.weights = weights;
     // console.log(this.weights);
   }
