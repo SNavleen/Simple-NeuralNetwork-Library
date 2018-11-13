@@ -1,3 +1,6 @@
+// TODO: add proper comments for doc
+// TODO: add mini batch size and batch size using info from (https://visualstudiomagazine.com/articles/2015/07/01/variation-on-back-propagation.aspx)
+
 // Import the libraries
 var linAlg = linearAlgebra();
 
@@ -19,6 +22,21 @@ function toArray(matrix){
   return matrix.toArray();
 }
 
+// Normalization
+class Normalization{
+  // TODO: let users use there own normalization functions
+  constructor(){
+  }
+
+  minMaxNorm(x, min, max){
+    return (x - min) / (max - min);
+  }
+
+  // setNormalization(func){
+  //   this.normalization = func;
+  // }
+}
+
 
 // Activation class
 class ActivationFunction {
@@ -29,16 +47,17 @@ class ActivationFunction {
 }
 
 let sigmoid = new ActivationFunction(
-  x => 1 / (1 + Math.exp(-x)),
-  y => y * (1 - y)
+  func = x => 1 / (1 + Math.exp(-x)),
+  dfunc = y => y * (1 - y)
 );
 
 let tanh = new ActivationFunction(
-  x => Math.tanh(x),
-  y => 1 - (y * y)
+  func = x => Math.tanh(x),
+  dfunc = y => 1 - (y * y)
 );
 
 
+// Neural Network
 class NeuralNetwork{
   constructor(sizeOfX, sizeOfY){
 
@@ -68,7 +87,7 @@ class NeuralNetwork{
     this.numOfLayers ++;
   }
 
-  generateWeights(seedValue, lo = -1, hi = 1){
+  generateWeights(seedValue = 0, lo = -1, hi = 1){
     // Set the seed
     Math.seedrandom(seedValue);
 
@@ -89,17 +108,20 @@ class NeuralNetwork{
         }
       }
     }
+
+    // Reset the seed back to Math.random() using time
+    Math.seedrandom();
     this.weights = weights;
     // console.log(this.weights);
   }
 
   // Setters
-  setLearningRateAlpha(learningRateAlpha = 0.1){
-    this.learningRateAlpha = learningRateAlpha;
-  }
-
   setActivationFunction(func = sigmoid){
     this.activationFunc = func;
+  }
+
+  setLearningRateAlpha(learningRateAlpha = 0.1){
+    this.learningRateAlpha = learningRateAlpha;
   }
 
   // setCostFunction(func){
@@ -119,7 +141,7 @@ class NeuralNetwork{
     return this.weights;
   }
 
-  getCost(output, outputPrime){
+  getCost(output, outputPrime){ // for an individual input and output
     // console.log("Expected: ", output);
     // console.log("Guess: ", outputPrime);
     var cost = new Array(this.sizeOfY);
