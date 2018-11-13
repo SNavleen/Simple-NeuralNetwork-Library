@@ -21,7 +21,7 @@ function setup() {
   trainingData.then((data) => {
     var dataPointX = [];
     var dataPointY = [];
-    for(let i = 0; i < 10000; i++) {
+    for(let i = 0; i < 3000; i++) {
       var trainingSet = data[Math.floor(Math.random() * data.length)];
       let input = trainingSet.input;
       let output = trainingSet.output;
