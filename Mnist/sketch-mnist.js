@@ -3,7 +3,7 @@ var nn;
 var set;
 var trainingSet, testingSet;
 var trainingIndex, testingIndex;
-var trainingLen = 5000, testingLen = 100;
+var trainingLen = 8000, testingLen = 2000;
 
 var imgHeight = 28, imgWidth = 28;
 
@@ -42,7 +42,7 @@ function setup() {
   nn.addHiddenLayer(32);
   nn.addHiddenLayer(16);
   nn.generateWeights(0);
-  nn.setLearningRateAlpha(0.01);
+  nn.setLearningRateAlpha(0.03);
 
   // Train the neural network by going throught the training set
   for(let i = 0; i < trainingSet.length; i ++) {
@@ -54,8 +54,6 @@ function setup() {
     
         // Run the neural network
         var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
-        // console.log(output);
-        // console.log(outputPrim);
         var cost = nn.getCost(output, outputPrim);
         nn.train(cost);
 
@@ -91,7 +89,11 @@ function mousePressed() {
 
   var input = testingSet[testingIndex].input;
   var output = testingSet[testingIndex].output;
+
+  // Run the neural network
   var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
+  var cost = nn.getCost(output, outputPrim);
+  nn.train(cost);
 
   // Draw the input image
   // noSmooth();
@@ -103,7 +105,6 @@ function mousePressed() {
   textAlign(CENTER);
   fill(color(255, 0, 0));
   text(indexOfMax(outputPrim).toString(), width / 1.3, height / 1.25);
-
 
   basicView();
 }
