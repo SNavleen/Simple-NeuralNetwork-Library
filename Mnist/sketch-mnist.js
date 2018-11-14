@@ -3,7 +3,7 @@ var nn;
 var set;
 var trainingSet, testingSet;
 var trainingIndex, testingIndex;
-var trainingLen = 8000, testingLen = 2000;
+var trainingLen = 10000, testingLen = 2000;
 
 var imgHeight = 28, imgWidth = 28;
 
@@ -38,11 +38,11 @@ function setup() {
 
 
   nn = new NeuralNetwork(inputLen, outputLen);
-  nn.addHiddenLayer(64);
+  // nn.addHiddenLayer(64);
   nn.addHiddenLayer(32);
   nn.addHiddenLayer(16);
   nn.generateWeights(0);
-  nn.setLearningRateAlpha(0.03);
+  nn.setLearningRateAlpha(0.3);
 
   // Train the neural network by going throught the training set
   for(let i = 0; i < trainingSet.length; i ++) {
