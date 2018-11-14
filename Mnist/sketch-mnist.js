@@ -3,7 +3,7 @@ var nn;
 var set;
 var trainingSet, testingSet;
 var trainingIndex, testingIndex;
-var trainingLen = 10000, testingLen = 2000;
+var trainingLen = 10000, testingLen = 100;
 
 var imgHeight = 28, imgWidth = 28;
 
@@ -45,31 +45,33 @@ function setup() {
   nn.setLearningRateAlpha(0.3);
 
   // Train the neural network by going throught the training set
-  for(let i = 0; i < trainingSet.length; i ++) {
-    ((i) => {
-      setTimeout(() => {
-        background(0);
-        var input = trainingSet[i].input;
-        var output = trainingSet[i].output;
-    
-        // Run the neural network
-        var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
-        var cost = nn.getCost(output, outputPrim);
-        nn.train(cost);
+  for(let j = 0; j < 2; j ++){
+    for(let i = 0; i < trainingSet.length; i ++) {
+      ((i) => {
+        setTimeout(() => {
+          background(0);
+          var input = trainingSet[i].input;
+          var output = trainingSet[i].output;
+      
+          // Run the neural network
+          var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
+          var cost = nn.getCost(output, outputPrim);
+          nn.train(cost);
 
-        // Draw the image
-        var img = getDigitImg(input);
-        image(img, 0, height / 3, width / 2, height / 1.5);
+          // Draw the image
+          var img = getDigitImg(input);
+          image(img, 0, height / 3, width / 2, height / 1.5);
 
-        // Draw the guess text
-        textSize(height / 2);
-        textAlign(CENTER);
-        fill(color(255, 0, 0));
-        text(indexOfMax(outputPrim).toString(), width / 1.3, height / 1.25);
+          // Draw the guess text
+          textSize(height / 2);
+          textAlign(CENTER);
+          fill(color(255, 0, 0));
+          text(indexOfMax(outputPrim).toString(), width / 1.3, height / 1.25);
 
-        basicView();
-      }, 25 * i);
-    }) (i);
+          basicView();
+        }, 25 * i);
+      }) (i);
+    }
   }
 
   noLoop();
@@ -104,7 +106,9 @@ function mousePressed() {
   textSize(height / 2);
   textAlign(CENTER);
   fill(color(255, 0, 0));
-  text(indexOfMax(outputPrim).toString(), width / 1.3, height / 1.25);
+  var outputValue = indexOfMax(outputPrim);
+  text(outputValue.toString(), width / 1.3, height / 1.25);
+  console.log("Confidence is: " + Math.round(outputPrim[outputValue] * 100) + "%");
 
   basicView();
 }
