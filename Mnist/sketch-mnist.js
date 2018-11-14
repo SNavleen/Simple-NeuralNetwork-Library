@@ -3,7 +3,7 @@ var nn;
 var set;
 var trainingSet, testingSet;
 var trainingIndex, testingIndex;
-var trainingLen = 5000, testingLen = 10;
+var trainingLen = 5000, testingLen = 100;
 
 var imgHeight = 28, imgWidth = 28;
 
@@ -38,7 +38,7 @@ function setup() {
 
 
   nn = new NeuralNetwork(inputLen, outputLen);
-  // nn.addHiddenLayer(64);
+  nn.addHiddenLayer(64);
   nn.addHiddenLayer(32);
   nn.addHiddenLayer(16);
   nn.generateWeights(0);
@@ -94,7 +94,7 @@ function mousePressed() {
   var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
 
   // Draw the input image
-  noSmooth();
+  // noSmooth();
   var img = getDigitImg(input);
   image(img, 0, height / 3, width / 2, height / 1.5);
 
