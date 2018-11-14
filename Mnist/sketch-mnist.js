@@ -49,7 +49,6 @@ function setup() {
     ((i) => {
       setTimeout(() => {
         background(0);
-        basicView();
         var input = trainingSet[i].input;
         var output = trainingSet[i].output;
     
@@ -70,6 +69,7 @@ function setup() {
         fill(color(255, 0, 0));
         text(indexOfMax(outputPrim).toString(), width / 1.3, height / 1.25);
 
+        basicView();
       }, 25 * i);
     }) (i);
   }
@@ -79,7 +79,6 @@ function setup() {
 
 function draw() {
   background(0);
-  basicView();
 
 	noLoop();
 }
@@ -104,6 +103,9 @@ function mousePressed() {
   textAlign(CENTER);
   fill(color(255, 0, 0));
   text(indexOfMax(outputPrim).toString(), width / 1.3, height / 1.25);
+
+
+  basicView();
 }
 
 function getDigitImg(input) {
