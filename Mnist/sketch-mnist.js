@@ -3,14 +3,28 @@ var nn;
 var set;
 var trainingSet, testingSet;
 var trainingIndex, testingIndex;
-var trainingLen = 8000, testingLen = 100;
+var trainingLen = 5000, testingLen = 10;
 
 var imgHeight = 28, imgWidth = 28;
 
 
+const basicView = () =>{
+  // Draw the center line
+  strokeWeight(2);
+  stroke(255);
+  line(width / 2, 0, width / 2, height);
+  
+  // Display text in both halfs of the canvas for input and guess
+  textSize(32);
+  textAlign(CENTER);
+  fill(color(255, 0, 0));
+  text("INPUT", width / 4, 32);
+  text("GUESS", width / 1.3, 32);
+}
+
 function setup() {
   // createCanvas must be the first statement
-  createCanvas(100, 100);
+  createCanvas(600, 300);
 
   set = mnist.set(trainingLen, testingLen);
 
@@ -24,47 +38,76 @@ function setup() {
 
 
   nn = new NeuralNetwork(inputLen, outputLen);
-  nn.addHiddenLayer(64);
+  // nn.addHiddenLayer(64);
   nn.addHiddenLayer(32);
   nn.addHiddenLayer(16);
   nn.generateWeights(0);
   nn.setLearningRateAlpha(0.01);
+
+  // Train the neural network by going throught the training set
+  for(let i = 0; i < trainingSet.length; i ++) {
+    ((i) => {
+      setTimeout(() => {
+        background(0);
+        basicView();
+        var input = trainingSet[i].input;
+        var output = trainingSet[i].output;
+    
+        // Run the neural network
+        var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
+        // console.log(output);
+        // console.log(outputPrim);
+        var cost = nn.getCost(output, outputPrim);
+        nn.train(cost);
+
+        // Draw the image
+        var img = getDigitImg(input);
+        image(img, 0, height / 3, width / 2, height / 1.5);
+
+        // Draw the guess text
+        textSize(height / 2);
+        textAlign(CENTER);
+        fill(color(255, 0, 0));
+        text(indexOfMax(outputPrim).toString(), width / 1.3, height / 1.25);
+
+      }, 25 * i);
+    }) (i);
+  }
+
   noLoop();
 }
 
 function draw() {
   background(0);
-
-  for(let i = 0; i < trainingSet.length; i ++) {
-    ((i) => {
-      setTimeout(() => {
-        var input = trainingSet[i].input;
-        var output = trainingSet[i].output;
-    
-        // If i take out noSmooth it will make it look blurry
-        noSmooth();
-        // Draw the image
-        image(drawDigit(input), 0, 0, width, height);
-        var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
-        console.log(output);
-        console.log(outputPrim);
-        var cost = nn.getCost(output, outputPrim);
-        nn.train(cost);
-      }, 25 * i);
-    }) (i);
-  }
+  basicView();
 
 	noLoop();
 }
 
 // Mouse click will be used for testing
 function mousePressed() {
-  trainingIndex = Math.round(random(trainingLen));
   redraw();
+
+  testingIndex = Math.round(random(testingLen));
+
+  var input = testingSet[testingIndex].input;
+  var output = testingSet[testingIndex].output;
+  var outputPrim = nn.guess(JSON.parse(JSON.stringify(input)));
+
+  // Draw the input image
+  noSmooth();
+  var img = getDigitImg(input);
+  image(img, 0, height / 3, width / 2, height / 1.5);
+
+  // Draw the guess text
+  textSize(height / 2);
+  textAlign(CENTER);
+  fill(color(255, 0, 0));
+  text(indexOfMax(outputPrim).toString(), width / 1.3, height / 1.25);
 }
 
-function drawDigit(input) {
-  var img = createImage(imgWidth, imgHeight);
+function getDigitImg(input) {
+  var img = createImage(28, 28);
   img.loadPixels();
   for (let y = 0; y < img.height; y++) {
     for (let x = 0; x < img.width; x++) {
@@ -77,4 +120,22 @@ function drawDigit(input) {
   }
   img.updatePixels();
   return img;
+}
+
+function indexOfMax(arr) {
+  if(arr.length === 0) {
+    return -1;
+  }
+
+  var max = arr[0];
+  var maxIndex = 0;
+
+  for(var i = 1; i < arr.length; i++) {
+    if(arr[i] > max) {
+      maxIndex = i;
+      max = arr[i];
+    }
+  }
+
+  return maxIndex;
 }
