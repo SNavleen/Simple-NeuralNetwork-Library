@@ -3,9 +3,10 @@ var nn;
 var set;
 var trainingSet, testingSet;
 var trainingIndex, testingIndex;
-var trainingLen = 10000, testingLen = 100;
 
-var imgHeight = 28, imgWidth = 28;
+const N = 2;
+const trainingLen = 10000, testingLen = 100;
+const imgHeight = 28, imgWidth = 28;
 
 
 const basicView = () =>{
@@ -42,10 +43,11 @@ function setup() {
   nn.addHiddenLayer(32);
   nn.addHiddenLayer(16);
   nn.generateWeights(0);
-  nn.setLearningRateAlpha(0.3);
+  nn.setLearningRateAlpha(0.03);
 
-  // Train the neural network by going throught the training set
-  for(let j = 0; j < 2; j ++){
+  // Go through the training set N times
+  for(let j = 0; j < N; j ++){
+    // Train the neural network by going throught the training set
     for(let i = 0; i < trainingSet.length; i ++) {
       ((i) => {
         setTimeout(() => {
